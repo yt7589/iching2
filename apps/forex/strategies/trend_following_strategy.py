@@ -1,12 +1,62 @@
 # 趋势跟踪策略
 import csv
+from typing import Dict
 from datetime import datetime
 from apps.forex.strategies.base_strategy import BaseStrategy
 from apps.forex.sliding_window import SlidingWindow
+from apps.forex.account import Account
+from apps.forex.forex_repository import ForexRepository
 
 class TrendFollowingStrategy(BaseStrategy):
+    data_window_small = SlidingWindow(5)
+    data_window_large = SlidingWindow(20)
+
     def __init__(self):
         self.name = 'apps.forex.strategies.trend_following_strategy.TrendFollowingStrategy'
+
+    def execute(self, account:Account, bar: Dict) -> int:
+        ####################################
+        #     trade logic starts here      #
+        ####################################
+        open = bar['Open']
+        close = bar['Close']
+        TrendFollowingStrategy.data_window_small.add(close)
+        TrendFollowingStrategy.data_window_large.add(close)
+        ma_small = TrendFollowingStrategy.moving_average(TrendFollowingStrategy.data_window_small.data)
+        ma_large = TrendFollowingStrategy.moving_average(TrendFollowingStrategy.data_window_large.data)
+        if close < ma_small and ma_small < ma_large and account.market_position >= 0:
+            order = {}
+            order['Type'] = 'Market'
+            order['Price'] = close
+            order['Side'] = 'Sell'
+            if account.market_position == 0:
+                order['Size'] = 10000
+            else:
+                order['Size'] = 20000
+            # orders_stream.put(order)
+            ForexRepository.orders_queue.put(order)
+
+        if close > ma_small and ma_small > ma_large and account.market_position <= 0:
+            order = {}
+            order['Type'] = 'Market'
+            order['Price'] = close
+            order['Side'] = 'Buy'
+            if account.market_position == 0:
+                order['Size'] = 10000
+            else:
+                order['Size'] = 20000
+            # orders_stream.put(order)
+            ForexRepository.orders_queue.put(order)
+
+    @staticmethod
+    def moving_average(data):
+	    return sum(data) / len(data)
+
+
+
+
+
+
 
     @staticmethod
     def prepare_data():

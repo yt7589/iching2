@@ -1,5 +1,6 @@
 # 外汇交易系统
 import argparse
+import csv
 import time
 import threading
 import matplotlib.pyplot as plt
@@ -13,19 +14,42 @@ from apps.forex.order_engine import OrderEngine
 from apps.forex.brokers.iching2_broker import Iching2Broker
 from apps.forex.exchs.lmax_bar_repo import LmaxBarRepo
 from apps.forex.sliding_window import SlidingWindow
+from apps.forex.exchs.audusd_daily_k_exch import AudusdDailyKExch
+from apps.forex.strategies.trend_following_strategy import TrendFollowingStrategy
 
 def main(args:argparse.Namespace = {}) -> None:
-    print(f'外汇交易系统 v0.0.2 001')
+    print(f'外汇交易系统 v0.0.3 趋势跟踪策略')
     # paper_trading(args=args)
-    back_testing(args=args)
+    # back_testing(args=args)
     # business_logic(args=args)
+    trend_following_back_testing(args=args)
 
 def trend_following_back_testing(args:argparse.Namespace = {}) -> None:
     '''
     趋势跟踪策略回测
     '''
-    data_window_small = SlidingWindow(5)
-    data_window_large = SlidingWindow(20)
+    start_time = time.perf_counter()
+    incoming_price_thread = threading.Thread(target = AudusdDailyKExch.connect)
+    account = AccountManager.get_account_by_id('a001')
+    strategy = TrendFollowingStrategy()
+    trading_thread = threading.Thread(target = TradeEngine.execute, args=(account, TradeEngine.RM_BACK_TESTING, strategy))
+    broker = Iching2Broker()
+    ordering_thread = threading.Thread(target = OrderEngine.processOrdersBackTesting, args=(account, broker))
+    incoming_price_thread.start()
+    trading_thread.start()
+    ordering_thread.start()
+    while True:
+        if incoming_price_thread.is_alive():
+            time.sleep(1)
+        else:
+            total_trades = len(account.list_of_orders)
+            print("Total trades:", total_trades)
+            print("Average trade:", account.equity / total_trades)
+            end_time = time.perf_counter()
+            print(f'Backtest complete in {round(end_time - start_time, 0)} second(s).')
+            plt.plot(account.equity_timeseries)
+            plt.show()
+            break
 
 def back_testing(args:argparse.Namespace = {}) -> None:
     '''

@@ -38,10 +38,12 @@ class OrderEngine(object):
                         account.market_position = account.market_position + order['Size']
                         account.capital -= order['RealPay']
                         account.equity += (current_price - order['Price']) * order['Size']
+                        account.list_of_orders.append(order)
                     if order['Side'] == 'Sell':
                         account.market_position = account.market_position - order['Size']
                         account.capital += order['RealPay']
                         account.equity -= (current_price - order['Price']) * order['Size']
+                        account.list_of_orders.append(order)
                     account.equity_timeseries.append(account.equity)
                     account.net_capital = account.capital + account.market_position * account.last_price
                     print(f'### 账户信息：captial: {account.capital}; position: {account.market_position}; equity: {account.equity}; net_capital: {account.net_capital}; ??????')
