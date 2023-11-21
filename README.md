@@ -55,3 +55,4 @@ python -m apps.forex.strategies.trend_following_strategy
 
 # Releases
 * 2023.11.18 v0.0.1 Initial Import: Forex trading system for live trading and back testing
+* 2023.11.21 v0.0.2 Add trend following strategy

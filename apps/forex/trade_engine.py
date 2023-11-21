@@ -24,19 +24,18 @@ class TradeEngine(object):
                     tick = ForexRepository.ticks_for_trade.get()
                     bar = ForexRepository.bars_queue.get(block=False)
                 else:
-                    print(f'### 回测运行模式')
                     bar = ForexRepository.bars_queue.get(block=False, timeout=1)
                 rst = strategy.execute(account=account, bar=bar)
                 print(f'### 策略执行结果：{rst}; {type(strategy)};')
                 if rst == -1:
                     print(f'！！！ 因为没有开仓不能卖产！！！！！！！！！！\n*****************************\n\n')
-                    account.equity_timeseries.append(account.equity)
                 elif rst == -2:
                     print(f'！！！ 因为没有资金不能买！！！！！！！！！！！！\n********************************\n\n')
+                if rst == 0:
                     account.equity_timeseries.append(account.equity)
-                print(f'### TradeEngine 100')
+                    account.net_capital = account.capital + account.market_position * bar['Close']
+                    account.net_capitals.append(account.net_capital)
                 if TradeEngine.RM_BACK_TESTING == run_mode:
-                    print(f'### 回测模式')
                     # ForexRepository.bars_queue.put(bar)
                     ForexRepository.trade_event.clear()
                     ForexRepository.order_event.set()

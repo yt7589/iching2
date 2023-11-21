@@ -19,6 +19,7 @@ class TrendFollowingStrategy(BaseStrategy):
         ####################################
         #     trade logic starts here      #
         ####################################
+        rst = 0
         open = bar['Open']
         close = bar['Close']
         TrendFollowingStrategy.data_window_small.add(close)
@@ -37,6 +38,7 @@ class TrendFollowingStrategy(BaseStrategy):
             #     order['Size'] = 20000
             # orders_stream.put(order)
             ForexRepository.orders_queue.put(order)
+            rst = -1
 
         if close > ma_small and ma_small > ma_large and account.market_position <= 0:
             if account.capital * 0.9 > close:
@@ -51,7 +53,9 @@ class TrendFollowingStrategy(BaseStrategy):
                 #     order['Size'] = 20000
                 # orders_stream.put(order)
                 ForexRepository.orders_queue.put(order)
+                rst = 1
         TrendFollowingStrategy.LN += 1
+        return rst
 
     @staticmethod
     def moving_average(sliding_window):
