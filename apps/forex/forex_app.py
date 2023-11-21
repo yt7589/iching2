@@ -44,10 +44,15 @@ def trend_following_back_testing(args:argparse.Namespace = {}) -> None:
         else:
             total_trades = len(account.list_of_orders)
             print("Total trades:", total_trades)
-            print("Average trade:", account.equity / total_trades)
+            print("Average trade:", (account.net_capital - account.initial_net_capital) / total_trades)
             end_time = time.perf_counter()
             print(f'Backtest complete in {round(end_time - start_time, 0)} second(s).')
-            plt.plot(account.equity_timeseries)
+            print(f'profit: {account.net_capital - account.initial_net_capital}')
+            # plt.plot(account.equity_timeseries)
+            plt.plot(account.net_capitals)
+            # 计算平均年化收益率
+            start_date = '2020-01-01'
+            end_date = '2022-12-13'
             plt.show()
             break
 

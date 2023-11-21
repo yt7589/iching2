@@ -39,11 +39,11 @@ class TrendFollowingStrategy(BaseStrategy):
             ForexRepository.orders_queue.put(order)
 
         if close > ma_small and ma_small > ma_large and account.market_position <= 0:
-            order = {}
-            order['Type'] = 'Market'
-            order['Price'] = close
-            order['Side'] = 'Buy'
             if account.capital * 0.9 > close:
+                order = {}
+                order['Type'] = 'Market'
+                order['Price'] = close
+                order['Side'] = 'Buy'
                 order['Size'] = int(account.capital * 0.9 / close)
                 # if account.market_position == 0:
                 #     order['Size'] = 10000

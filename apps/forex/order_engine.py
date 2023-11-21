@@ -46,6 +46,7 @@ class OrderEngine(object):
                         account.list_of_orders.append(order)
                     account.equity_timeseries.append(account.equity)
                     account.net_capital = account.capital + account.market_position * account.last_price
+                    account.net_capitals.append(account.net_capital)
                     print(f'### 账户信息：captial: {account.capital}; position: {account.market_position}; equity: {account.equity}; net_capital: {account.net_capital}; ??????')
                     print(f'\n***************************************\n\n')
                 elif order['Status'] == 'Rejected':

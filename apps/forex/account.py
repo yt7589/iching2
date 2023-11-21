@@ -11,5 +11,7 @@ class Account(object):
         self.equity = 0 # 资产净值
         self.last_price = 0 # 最后一次交易价格
         self.equity_timeseries = [] # 资产净值时间序列
-        self.net_capital = self.initial_capital
+        self.initial_net_capital = self.initial_capital + self.market_position * 0.70066
+        self.net_capital = self.initial_net_capital
+        self.net_capitals = []
         self.list_of_orders = []
