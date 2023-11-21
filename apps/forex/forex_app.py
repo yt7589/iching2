@@ -51,8 +51,7 @@ def trend_following_back_testing(args:argparse.Namespace = {}) -> None:
             # plt.plot(account.equity_timeseries)
             plt.plot(account.net_capitals)
             # 计算平均年化收益率
-            start_date = '2020-01-01'
-            end_date = '2022-12-13'
+            print(f'### roi of year: {(account.net_capital - account.initial_net_capital)/account.initial_net_capital/3};')
             plt.show()
             break
 
