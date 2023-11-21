@@ -48,8 +48,8 @@ def trend_following_back_testing(args:argparse.Namespace = {}) -> None:
             end_time = time.perf_counter()
             print(f'Backtest complete in {round(end_time - start_time, 0)} second(s).')
             print(f'profit: {account.net_capital - account.initial_net_capital}')
-            # plt.plot(account.equity_timeseries)
-            plt.plot(account.net_capitals)
+            plt.plot(account.equity_timeseries)
+            # plt.plot(account.net_capitals)
             # 计算平均年化收益率
             print(f'### roi of year: {(account.net_capital - account.initial_net_capital)/account.initial_net_capital/3};')
             plt.show()
