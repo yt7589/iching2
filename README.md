@@ -31,7 +31,7 @@ Iching for quantitative trading version 2
 </details>
 
 ## 1.2. 趋势跟踪策略开发
-### 2.2.1. 概述
+### 1.2.1. 概述
 我们认为市场可以分为：上升、下降、震荡，判断标准：
 * 上升：收盘价在短期移动平均线之上，并且短期移动平均线在长期移动平均线之上；
 * 下降：收盘价在短期移动平均线之下，并且短期移动平均线在长期移动平均线之下；
@@ -43,7 +43,7 @@ Iching for quantitative trading version 2
 3. 进入时机；
 4. 退出时机；
 
-### 2.2.2. 品种选择
+### 1.2.2. 品种选择
 每种策略都有适合的市场和币值对，以趋势跟踪策略为例，就比较适合到澳大利亚元与日元AUDJPY、澳大利元与美元AUDUSD（美元利率低的时候）。因为澳大利亚元受金价和矿产品出口影响很明显，而这些产品具有明确的周期性。
 对于趋势跟踪策略，日内如分钟级交易数据，由于人们交易习惯的原因，有很多假的趋势，会对识别真正的趋势造成影响，因此选择日K数据比较合适。
 综上所述，我们选择AUDUSD，以日K数据为准，以USD为计价单位。
@@ -52,6 +52,17 @@ Iching for quantitative trading version 2
 python -m apps.forex.strategies.trend_following_strategy
 ```
 生成的数据集文件为：apps\forex\datasets\eurusd_1_tick.csv 。这里需要注意，00:00属于前一天，因为其表示23:59至00:00中间发生的行情数据。
+
+### 1.2.3. 回测结果
+采用AUDUSD货币对，2020-01-01至2022-12-13的日K行情数据进行回测，初始资金为50000美元和50000澳元，回测结果为：
+```bash
+Total trades: 289
+Average trade: 65.89423169550165
+Backtest complete in 3.0 second(s).
+profit: 19043.432959999976
+roi of year: 0.07465114704487268;
+```
+既最终的年化收益率为7%左右，共进行289次交易，平均每次交易盈利65美元，最终的利润为19043美金，实测效果还可以。
 
 # Releases
 * 2023.11.18 v0.0.1 Initial Import: Forex trading system for live trading and back testing
