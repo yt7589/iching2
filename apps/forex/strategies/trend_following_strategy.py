@@ -8,6 +8,7 @@ from apps.forex.account import Account
 from apps.forex.forex_repository import ForexRepository
 
 class TrendFollowingStrategy(BaseStrategy):
+    LN = 2
     data_window_small = SlidingWindow(5)
     data_window_large = SlidingWindow(20)
 
@@ -22,17 +23,18 @@ class TrendFollowingStrategy(BaseStrategy):
         close = bar['Close']
         TrendFollowingStrategy.data_window_small.add(close)
         TrendFollowingStrategy.data_window_large.add(close)
-        ma_small = TrendFollowingStrategy.moving_average(TrendFollowingStrategy.data_window_small.data)
-        ma_large = TrendFollowingStrategy.moving_average(TrendFollowingStrategy.data_window_large.data)
+        ma_small = TrendFollowingStrategy.moving_average(TrendFollowingStrategy.data_window_small)
+        ma_large = TrendFollowingStrategy.moving_average(TrendFollowingStrategy.data_window_large)
         if close < ma_small and ma_small < ma_large and account.market_position >= 0:
             order = {}
             order['Type'] = 'Market'
             order['Price'] = close
             order['Side'] = 'Sell'
-            if account.market_position == 0:
-                order['Size'] = 10000
-            else:
-                order['Size'] = 20000
+            order['Size'] = account.market_position
+            # if account.market_position == 0:
+            #     order['Size'] = 10000
+            # else:
+            #     order['Size'] = 20000
             # orders_stream.put(order)
             ForexRepository.orders_queue.put(order)
 
@@ -41,16 +43,19 @@ class TrendFollowingStrategy(BaseStrategy):
             order['Type'] = 'Market'
             order['Price'] = close
             order['Side'] = 'Buy'
-            if account.market_position == 0:
-                order['Size'] = 10000
-            else:
-                order['Size'] = 20000
-            # orders_stream.put(order)
-            ForexRepository.orders_queue.put(order)
+            if account.capital * 0.9 > close:
+                order['Size'] = int(account.capital * 0.9 / close)
+                # if account.market_position == 0:
+                #     order['Size'] = 10000
+                # else:
+                #     order['Size'] = 20000
+                # orders_stream.put(order)
+                ForexRepository.orders_queue.put(order)
+        TrendFollowingStrategy.LN += 1
 
     @staticmethod
-    def moving_average(data):
-	    return sum(data) / len(data)
+    def moving_average(sliding_window):
+	    return sum(sliding_window.data) / sliding_window.cnt
 
 
 

@@ -1,13 +1,15 @@
 #
+import sys
+sys.path.append('./libs/backtrader')
 import argparse
 from apps.ake.ake_app import AkeApp
-import apps.lmax.forex_data as forex_data
+import apps.forex.forex_app as forex_app
 
 def main(args:argparse.Namespace = {}) -> None:
     print(f'Iching2 v0.0.1')
     # app = AkeApp()
     # app.startup(args=args)
-    forex_data.main(args=args)
+    forex_app.main(args=args)
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
