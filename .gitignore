@@ -1,7 +1,9 @@
 # 
 work/
 logs/
-apps/forex/datasets
+apps/forex/datasets/
+apis/sfit/build/
+apis/sfit/bin/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
