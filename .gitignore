@@ -4,7 +4,7 @@ logs/
 apps/forex/datasets/
 apis/sfit/build/
 apis/sfit/bin/
-hft/build
+hfts/build
 libs/googletest
 
 # Byte-compiled / optimized / DLL files
