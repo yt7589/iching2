@@ -6,6 +6,8 @@ apis/sfit/build/
 apis/sfit/bin/
 hfts/build
 libs/googletest
+libs/gflags
+libs/glog
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

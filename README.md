@@ -29,9 +29,35 @@ make
 # ./trading_main CLIENT_ID ALGO_TYPE [CLIP_1 THRESH_1 MAX_ORDER_SIZE_1 MAX_POS_1 MAX_LOSS_1] [CLIP_2 THRESH_2 MAX_ORDER_SIZE_2 MAX_POS_2 MAX_LOSS_2]
 ./trading_main 1 MAKER -100 60 0.6 150 300 -100 150 0.5 250 600 -100 200 0.4 500 3000 -100 1000 0.9 5000 4000 -100 300 0.8 1500 3000
 ```
+## 集成glog
+安装gflags库：
+```bash
+git cloen git@github.com:gflags/gflags.git
+cd gflags
+mkdir build
+cd build
+vim ../CMakeLists.txt
+###########################################################################################
+# 在set后面添加如下行
+add_compile_options(-fPIC)
+###########################################################################################
+cmake ..
+make
+sudo make install
+```
 
-# 1. 基于事件的交易系统
-## 1.1. 程序启动
+编译glog
+```bash
+git clone git@github.com:google/glog.gif
+cd glog
+mkdir build
+cd build
+cmake ..
+make
+```
+
+# 2. 基于事件的交易系统
+## 2.1. 程序启动
 <details><summary>1. 程序的入口点为apps\forex\forex_app.py::main方法</summary>
 会调用backtesting方法
 </details>
@@ -59,8 +85,8 @@ make
     </details>
 </details>
 
-## 1.2. 趋势跟踪策略开发
-### 1.2.1. 概述
+## 2.2. 趋势跟踪策略开发
+### 2.2.1. 概述
 我们认为市场可以分为：上升、下降、震荡，判断标准：
 * 上升：收盘价在短期移动平均线之上，并且短期移动平均线在长期移动平均线之上；
 * 下降：收盘价在短期移动平均线之下，并且短期移动平均线在长期移动平均线之下；
@@ -72,7 +98,7 @@ make
 3. 进入时机；
 4. 退出时机；
 
-### 1.2.2. 品种选择
+### 2.2.2. 品种选择
 每种策略都有适合的市场和币值对，以趋势跟踪策略为例，就比较适合到澳大利亚元与日元AUDJPY、澳大利元与美元AUDUSD（美元利率低的时候）。因为澳大利亚元受金价和矿产品出口影响很明显，而这些产品具有明确的周期性。
 对于趋势跟踪策略，日内如分钟级交易数据，由于人们交易习惯的原因，有很多假的趋势，会对识别真正的趋势造成影响，因此选择日K数据比较合适。
 综上所述，我们选择AUDUSD，以日K数据为准，以USD为计价单位。
@@ -82,7 +108,7 @@ python -m apps.forex.strategies.trend_following_strategy
 ```
 生成的数据集文件为：apps\forex\datasets\eurusd_1_tick.csv 。这里需要注意，00:00属于前一天，因为其表示23:59至00:00中间发生的行情数据。
 
-### 1.2.3. 回测结果
+### 2.2.3. 回测结果
 采用AUDUSD货币对，2020-01-01至2022-12-13的日K行情数据进行回测，初始资金为50000美元和50000澳元，回测结果为：
 ```bash
 Total trades: 289

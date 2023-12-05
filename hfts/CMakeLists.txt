@@ -20,15 +20,18 @@ list(APPEND LIBS pthread)
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/exchange)
 include_directories(${PROJECT_SOURCE_DIR}/trading)
+include_directories(${PROJECT_SOURCE_DIR}/libs/glog/build/glog)
 
 LINK_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/../libs/googletest/build/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/../libs/glog/build
     ${CMAKE_CURRENT_SOURCE_DIR}/../apis/sfit/lib/api/ctp
     ${PROJECT_BINARY_DIR}/lib
     /usr/local/lib
     /usr/lib
 )
 list(APPEND LIBS gtest)
+list(APPEND LIBS glog)
 list(APPEND LIBS thostmduserapi thosttraderapi)
 
 add_executable(exchange_main exchange/exchange_main.cpp)
