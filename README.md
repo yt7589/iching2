@@ -1,6 +1,35 @@
 # iching2
 Iching for quantitative trading version 2
 
+# 1. 系统安装
+```bash
+ssh-keygen -t ed25519 -C "yt7589@qq.com"   # password: Gile2018 ~/.ssh/id_ed25519
+# 将~/.ssh/id_ed25519文件中的内容添加到github的ssh中，名称为：wsl_notebook。
+git clone git@github.com:yt7589/iching2.git
+# 输入密码为 Gile2018
+cd iching2
+# 将CTP的Linux库拷贝到apis/sfit/lib目录下
+# 下载编译单元测试库
+cd libs
+git clone git@github.com:google/googletest.git
+cd googletest
+mkdir build
+cd build
+cmake ..
+make
+# 编译C++高频交易系统
+cd hfts
+mkdir build
+cd build
+cmake ..
+make
+# 启动交易所端
+./exchange_main
+# 启动交易客户端
+# ./trading_main CLIENT_ID ALGO_TYPE [CLIP_1 THRESH_1 MAX_ORDER_SIZE_1 MAX_POS_1 MAX_LOSS_1] [CLIP_2 THRESH_2 MAX_ORDER_SIZE_2 MAX_POS_2 MAX_LOSS_2]
+./trading_main 1 MAKER -100 60 0.6 150 300 -100 150 0.5 250 600 -100 200 0.4 500 3000 -100 1000 0.9 5000 4000 -100 300 0.8 1500 3000
+```
+
 # 1. 基于事件的交易系统
 ## 1.1. 程序启动
 <details><summary>1. 程序的入口点为apps\forex\forex_app.py::main方法</summary>
